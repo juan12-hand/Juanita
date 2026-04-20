@@ -113,6 +113,7 @@ letter-spacing: 0.3px;
 .filter-btn[data-cat=“divertidas”].active{ background: var(–accent2); border-color: var(–accent2); }
 .filter-btn[data-cat=“profundas”].active { background: var(–accent5); border-color: var(–accent5); }
 .filter-btn[data-cat=“atrevidas”].active { background: var(–accent1); border-color: var(–accent1); }
+.filter-btn[data-cat=“intimas”].active   { background: #ff85a1; border-color: #ff85a1; }
 .filter-btn[data-cat=“retos”].active     { background: var(–accent3); border-color: var(–accent3); }
 
 /* Turno */
@@ -166,6 +167,7 @@ transition: background 0.3s;
 .cat-divertidas .card::before { background: var(–accent2); }
 .cat-profundas .card::before  { background: var(–accent5); }
 .cat-atrevidas .card::before  { background: var(–accent1); }
+.cat-intimas .card::before    { background: #ff85a1; }
 .cat-retos .card::before      { background: var(–accent3); }
 
 .cat-badge {
@@ -182,6 +184,7 @@ opacity: 0.85;
 .cat-divertidas .cat-badge { background: rgba(255,217,61,0.15);  color: var(–accent2); }
 .cat-profundas  .cat-badge { background: rgba(199,125,255,0.15); color: var(–accent5); }
 .cat-atrevidas  .cat-badge { background: rgba(255,107,107,0.15); color: var(–accent1); }
+.cat-intimas    .cat-badge { background: rgba(255,133,161,0.15); color: #ff85a1; }
 .cat-retos      .cat-badge { background: rgba(107,203,119,0.15); color: var(–accent3); }
 
 .question-text {
@@ -354,6 +357,7 @@ to   { opacity: 1; transform: translateY(0); }
     <button class="filter-btn" data-cat="divertidas" onclick="setFilter('divertidas', this)">😂 Divertidas</button>
     <button class="filter-btn" data-cat="profundas" onclick="setFilter('profundas', this)">🌊 Profundas</button>
     <button class="filter-btn" data-cat="atrevidas" onclick="setFilter('atrevidas', this)">🔥 Atrevidas</button>
+    <button class="filter-btn" data-cat="intimas" onclick="setFilter('intimas', this)">🌹 Íntimas</button>
     <button class="filter-btn" data-cat="retos" onclick="setFilter('retos', this)">⚡ Retos</button>
   </div>
 
@@ -408,6 +412,21 @@ const questions = {
     { q: "¿Cuál fue tu mayor aventura hasta ahora?", emoji: "🗺️" },
     { q: "¿A qué edad te sientes por dentro?", emoji: "✨" },
     { q: "¿Cuál es tu mayor manía o costumbre rara?", emoji: "🤔" },
+    { q: "¿Qué hobby siempre quisiste tener pero nunca empezaste?", emoji: "🎨" },
+    { q: "¿Cuál es tu libro o película favorita y por qué te marcó?", emoji: "📖" },
+    { q: "¿Con quién hablarías una hora entera sin aburrirte jamás?", emoji: "🗣️" },
+    { q: "¿Qué rutina diaria te hace sentir que el día va bien?", emoji: "🌅" },
+    { q: "¿Qué tipo de música escuchas cuando nadie te ve?", emoji: "🎧" },
+    { q: "¿Eres más de mar o de montaña? ¿Por qué?", emoji: "🏔️" },
+    { q: "¿Cuál es el consejo que más agradeces haber recibido?", emoji: "🦉" },
+    { q: "¿Qué es lo que más extrañas de tu versión de hace 5 años?", emoji: "🕐" },
+    { q: "¿Qué es lo que más te enorgullece de tu familia?", emoji: "👨‍👩‍👧" },
+    { q: "¿Cuál es la app que más usas y qué dice eso de ti?", emoji: "📲" },
+    { q: "¿Cómo te das cuenta de que alguien es buena persona?", emoji: "🫶" },
+    { q: "¿Qué tan importante es para ti la puntualidad?", emoji: "⏰" },
+    { q: "¿Eres de los que planean todo o de los que improvisan?", emoji: "🗓️" },
+    { q: "¿Qué cosa aprendiste este año que no esperabas aprender?", emoji: "🧠" },
+    { q: "¿Qué animal doméstico tendrías si pudieras tener cualquiera?", emoji: "🐾" },
   ],
   divertidas: [
     { q: "¿Si fueras un personaje de película, cuál serías y por qué?", emoji: "🎭" },
@@ -423,7 +442,23 @@ const questions = {
     { q: "Si pudieras tener un superpoder ridículo, ¿cuál sería?", emoji: "🦸" },
     { q: "¿Cuál es el chiste más malo que sabes pero igual te ríes?", emoji: "😂" },
     { q: "¿Cuál sería tu nombre artístico si fueras cantante?", emoji: "🎤" },
-    { q: "¿Que app en tu celular te daría vergüenza que alguien vea?", emoji: "📱" },
+    { q: "¿Qué app en tu celular te daría vergüenza que alguien vea?", emoji: "📱" },
+    { q: "¿Cuál es el apodo más raro que te han puesto?", emoji: "🏷️" },
+    { q: "¿Cuál es la excusa más ridícula que has dado para no salir de casa?", emoji: "🛋️" },
+    { q: "Si tuvieras que comer solo una cosa por el resto de tu vida, ¿qué sería?", emoji: "🍜" },
+    { q: "¿Cuál es tu baile más vergonzoso cuando estás solo/a en casa?", emoji: "🕺" },
+    { q: "¿Qué harías si te encuentras a tu ex en el supermercado?", emoji: "🛒" },
+    { q: "¿A qué famoso/a crees que podrías convencer de ser tu amigo/a?", emoji: "⭐" },
+    { q: "¿Cuál es la cosa más absurda que has comprado por internet?", emoji: "📦" },
+    { q: "Si tu vida fuera una telenovela, ¿cuál sería el título?", emoji: "📽️" },
+    { q: "¿Cuál es el mensaje de texto más cringe que enviaste y no puedes borrar de tu memoria?", emoji: "💬" },
+    { q: "¿Qué personaje animado serías y cuál sería tu villano favorito?", emoji: "🦹" },
+    { q: "¿Cuál sería tu lema de vida si fuera un sticker?", emoji: "🏷️" },
+    { q: "¿Cuál fue tu fase estética más cuestionable de adolescente?", emoji: "👾" },
+    { q: "¿Tienes algún miedo irracional absurdo que no puedes explicar?", emoji: "😱" },
+    { q: "¿Qué canción te sería imposible no cantar si la escuchas?", emoji: "🎶" },
+    { q: "¿Cuál es la decisión random más extraña que has tomado en tu vida?", emoji: "🎲" },
+    { q: "¿Qué harías si de repente te vuelves invisible por un día?", emoji: "👻" },
   ],
   profundas: [
     { q: "¿Qué es lo que más miedo te da en esta vida?", emoji: "🌑" },
@@ -439,6 +474,23 @@ const questions = {
     { q: "¿Qué crees que la gente suele malentender de ti?", emoji: "🔍" },
     { q: "¿Cuándo fue la última vez que lloraste y por qué?", emoji: "💧" },
     { q: "¿Hay algo que estés dejando para después que sabes que deberías hacer ya?", emoji: "⌛" },
+    { q: "¿Cuál es la persona que más ha influenciado quien eres hoy?", emoji: "🧭" },
+    { q: "¿Qué te costaría perder más: tu memoria del pasado o tu visión del futuro?", emoji: "🌫️" },
+    { q: "¿Hay algo que nadie sepa de ti y que te gustaría que alguien supiera?", emoji: "🔐" },
+    { q: "¿En qué momento de tu vida te sentiste más solo/a?", emoji: "🌒" },
+    { q: "¿Qué haría que sintieras que tu vida fue bien vivida?", emoji: "🌺" },
+    { q: "¿Cuándo fue la última vez que hiciste algo que te daba miedo?", emoji: "🦋" },
+    { q: "¿Cuál es el límite que jamás dejarías que alguien cruzara contigo?", emoji: "🚧" },
+    { q: "¿Qué parte de ti crees que todavía está sanando?", emoji: "🩹" },
+    { q: "¿Qué cosa te cuesta reconocer de ti mismo/a aunque sabes que es verdad?", emoji: "🪞" },
+    { q: "¿Cuál sería la carta que le escribirías a tu yo de 15 años?", emoji: "✉️" },
+    { q: "¿Crees que la gente cambia de verdad? ¿Has cambiado tú?", emoji: "🔄" },
+    { q: "¿Qué necesitas escuchar de alguien más que nunca te lo han dicho?", emoji: "👂" },
+    { q: "¿Cuál es la cosa que más te ha costado soltar en la vida?", emoji: "🍂" },
+    { q: "¿Qué sacrificio has hecho por alguien y que no te arrepientes de haber hecho?", emoji: "🕯️" },
+    { q: "¿Cuándo fue la primera vez que sentiste que eras capaz de todo?", emoji: "⚡" },
+    { q: "¿Hay algo que te hayan hecho y que todavía no has podido perdonar del todo?", emoji: "🫀" },
+    { q: "¿Qué es lo que más te da esperanza en este momento de tu vida?", emoji: "🌤️" },
   ],
   atrevidas: [
     { q: "¿Cuál fue tu primer crush y cómo terminó esa historia?", emoji: "💘" },
@@ -453,6 +505,56 @@ const questions = {
     { q: "¿Cuál sería la señal definitiva de que alguien te gusta de verdad?", emoji: "🌡️" },
     { q: "¿Qué es lo que más te gusta que te digan cuando alguien te tiene confianza?", emoji: "🫦" },
     { q: "¿Qué canción le pondrías a alguien que te gusta para que capte el mensaje?", emoji: "🎶" },
+    { q: "¿Cuántas relaciones has tenido y cuál fue la más intensa?", emoji: "🔥" },
+    { q: "¿Qué es lo que más te pone nervioso/a cuando alguien te gusta?", emoji: "😰" },
+    { q: "¿Cuál es el coqueteo más obvio que has ignorado sin querer?", emoji: "🙈" },
+    { q: "¿Qué detalle de alguien te enamora instantáneamente?", emoji: "✨" },
+    { q: "¿Has mandado mensaje a alguien equivocado sobre esa misma persona?", emoji: "📲" },
+    { q: "¿Cuál fue la cita más horrible que tuviste y qué pasó?", emoji: "💀" },
+    { q: "¿Cuándo fue la última vez que sentiste mariposas en el estómago?", emoji: "🦋" },
+    { q: "¿Qué cosa de la otra persona te llamó la atención cuando se conocieron?", emoji: "👀" },
+    { q: "¿Eres de los que da el primer paso o esperas a que te lo den?", emoji: "🏃" },
+    { q: "¿Cuál es la cosa más linda que alguien hizo por ti en una relación?", emoji: "🌹" },
+    { q: "¿Tienes alguna regla no negociable en una relación?", emoji: "📋" },
+    { q: "¿Cuál fue la ruptura que más te costó superar?", emoji: "🌧️" },
+    { q: "¿Qué es lo que más te gusta del otro sexo que nadie suele mencionar?", emoji: "💫" },
+    { q: "¿Serías capaz de tener una relación a distancia? ¿Por qué?", emoji: "✈️" },
+    { q: "¿Cuál es el piropo más raro o curioso que te han dicho?", emoji: "😏" },
+    { q: "¿Qué cosa haría que perdieras el interés en alguien al instante?", emoji: "❌" },
+    { q: "¿Prefieres una relación tranquila y estable o una intensa y apasionada?", emoji: "⚖️" },
+    { q: "¿Qué harías si descubres que le gustas a alguien que no esperabas?", emoji: "😲" },
+  ],
+  intimas: [
+    { q: "¿Qué parte de tu cuerpo es la que más te gusta?", emoji: "🌹" },
+    { q: "¿Qué es lo que más te atrae de la persona que tienes enfrente ahora mismo?", emoji: "👁️" },
+    { q: "¿Qué tipo de contacto físico es el que más te hace sentir conectado/a con alguien?", emoji: "🫂" },
+    { q: "¿Eres más de besos suaves o de besos apasionados?", emoji: "💋" },
+    { q: "¿Qué es lo primero que pensaste cuando viste a esta persona por primera vez?", emoji: "💭" },
+    { q: "¿Cuál es el lugar más romántico donde te gustaría estar ahora mismo?", emoji: "🌙" },
+    { q: "¿Qué canción pondría la otra persona si quisiera crear el ambiente perfecto?", emoji: "🎶" },
+    { q: "¿Qué es lo que más te cuesta decirle a alguien que te gusta?", emoji: "🤫" },
+    { q: "¿Cuándo fue la última vez que alguien te puso nervioso/a solo con mirarte?", emoji: "😳" },
+    { q: "¿Qué es lo que más te gusta sentir cuando estás cerca de alguien especial?", emoji: "🌡️" },
+    { q: "¿Qué parte del cuerpo de alguien llama más tu atención al conocerlo?", emoji: "✨" },
+    { q: "¿Eres de los que se pone nervioso/a con un roce accidental o lo ignoras?", emoji: "⚡" },
+    { q: "¿Qué cosa haría que esta noche sea memorable para ti?", emoji: "🌟" },
+    { q: "¿Qué es lo que más te gusta en un abrazo: la duración, la intensidad o la espontaneidad?", emoji: "🤗" },
+    { q: "¿Hay algo que sientas que esta persona aún no sabe de ti y que te gustaría que supiera?", emoji: "🔐" },
+    { q: "¿Cuál es tu ambiente ideal para una noche romántica?", emoji: "🕯️" },
+    { q: "¿Qué tan importante es para ti la conexión emocional antes de la física?", emoji: "💞" },
+    { q: "¿Qué es lo que más te gusta que te hagan cuando te sientes vulnerable?", emoji: "🫶" },
+    { q: "¿Hay algo que sientas que te faltaría si esta persona no estuviera?", emoji: "🌑" },
+    { q: "¿Qué es lo que más te excita emocionalmente de conocer a alguien nuevo?", emoji: "🦋" },
+    { q: "¿Qué tipo de conversación hace que te sientas más cerca de alguien?", emoji: "🌊" },
+    { q: "¿Cuál es el gesto físico que más te derrite cuando lo hace alguien que te gusta?", emoji: "🥹" },
+    { q: "¿Qué dirías si supieras que la otra persona no lo va a juzgar?", emoji: "🤐" },
+    { q: "¿Hay algo de la otra persona que te gustaría explorar más pero no has preguntado?", emoji: "🗝️" },
+    { q: "¿Qué es lo más bonito que le dirías a alguien que te importa mucho en este momento?", emoji: "💌" },
+    { q: "¿Prefieres que te digan lo que sienten o que te lo demuestren con acciones?", emoji: "🎭" },
+    { q: "¿Qué es lo más íntimo que compartirías con alguien en quien confías totalmente?", emoji: "🔓" },
+    { q: "¿Cuándo fue la última vez que alguien te hizo sentir realmente deseado/a?", emoji: "🌹" },
+    { q: "¿Hay algo que estés sintiendo ahora mismo que no te atreves a decir en voz alta?", emoji: "💫" },
+    { q: "¿Qué harías si pudieras hacer una sola cosa esta noche sin consecuencias?", emoji: "🌙" },
   ],
   retos: [
     { q: "Imita a la última persona que llamaste por teléfono. El otro decide si estuvo bien.", emoji: "🎭" },
@@ -465,6 +567,21 @@ const questions = {
     { q: "Haz una predicción sobre cómo será la vida del otro en 10 años.", emoji: "🔮" },
     { q: "El otro tiene que adivinar tu contraseña de WiFi de casa con pistas.", emoji: "📶" },
     { q: "Canta los primeros 15 segundos de la canción que tengas más escuchada.", emoji: "🎤" },
+    { q: "Escríbele al otro un mensaje de texto como si fueran su ex. Sin reírse.", emoji: "😐" },
+    { q: "Dile al otro una cosa que cambiarías de él/ella y una que nunca cambiarías.", emoji: "⚖️" },
+    { q: "Haz la pose más dramática que puedas para una foto. El otro la guarda.", emoji: "📷" },
+    { q: "Di en 30 segundos todas las cosas que recuerdas sobre esta persona.", emoji: "⏱️" },
+    { q: "Muéstrale al otro tu Spotify Wrapped o tu lista de reproducción más escuchada.", emoji: "🎵" },
+    { q: "El otro tiene que adivinar cuál es tu mayor virtud. Si acierta, tú pagas algo.", emoji: "🎯" },
+    { q: "Dile al otro algo que nunca te imaginaste que le dirías cuando se conocieron.", emoji: "😲" },
+    { q: "Llama a tu mamá o papá y diles que conociste a alguien interesante. El otro escucha.", emoji: "☎️" },
+    { q: "Dibuja al otro en 60 segundos. Sin borrar nada.", emoji: "✏️" },
+    { q: "Describe cómo crees que será la próxima semana del otro con total seriedad.", emoji: "🔮" },
+    { q: "Muéstrale al otro la última búsqueda que hiciste en Google.", emoji: "🔍" },
+    { q: "El otro tiene que adivinar cuál es tu mayor miedo solo con preguntas de sí/no.", emoji: "❓" },
+    { q: "Dile al otro un apodo que le pondrías y explica por qué.", emoji: "🏷️" },
+    { q: "Intercambien teléfonos por 30 segundos. Solo pueden mirar, no tocar nada.", emoji: "📱" },
+    { q: "Cuéntale al otro un secreto que nunca has dicho en voz alta. Uno de verdad.", emoji: "🤫" },
   ]
 };
 
@@ -473,6 +590,7 @@ const catMeta = {
   divertidas: { label: "😂 Divertidas", css: "cat-divertidas" },
   profundas:  { label: "🌊 Profundas",  css: "cat-profundas"  },
   atrevidas:  { label: "🔥 Atrevidas",  css: "cat-atrevidas"  },
+  intimas:    { label: "🌹 Íntimas",    css: "cat-intimas"    },
   retos:      { label: "⚡ Retos",       css: "cat-retos"      },
 };
 
