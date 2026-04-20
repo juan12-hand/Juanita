@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Juego de Preguntas</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+–bg: #0d0d0f;
+–card: #161618;
+–border: #2a2a2e;
+–accent1: #ff6b6b;
+–accent2: #ffd93d;
+–accent3: #6bcb77;
+–accent4: #4d96ff;
+–accent5: #c77dff;
+–text: #f0eee8;
+–muted: #888;
+}
+
+body {
+background: var(–bg);
+color: var(–text);
+font-family: ‘DM Sans’, sans-serif;
+min-height: 100vh;
+display: flex;
+flex-direction: column;
+align-items: center;
+padding: 24px 16px 48px;
+position: relative;
+overflow-x: hidden;
+}
+
+body::before {
+content: ‘’;
+position: fixed;
+top: -50%;
+left: -50%;
+width: 200%;
+height: 200%;
+background: radial-gradient(ellipse at 30% 20%, rgba(255,107,107,0.06) 0%, transparent 50%),
+radial-gradient(ellipse at 70% 80%, rgba(77,150,255,0.06) 0%, transparent 50%);
+pointer-events: none;
+z-index: 0;
+}
+
+.wrapper { position: relative; z-index: 1; width: 100%; max-width: 540px; }
+
+header {
+text-align: center;
+margin-bottom: 32px;
+padding-top: 8px;
+}
+
+header h1 {
+font-family: ‘Playfair Display’, serif;
+font-size: clamp(2rem, 7vw, 3rem);
+font-weight: 900;
+line-height: 1.05;
+letter-spacing: -1px;
+background: linear-gradient(135deg, #ff6b6b 0%, #ffd93d 50%, #ff6b6b 100%);
+background-size: 200%;
+-webkit-background-clip: text;
+-webkit-text-fill-color: transparent;
+animation: shimmer 4s ease infinite;
+}
+
+@keyframes shimmer {
+0%, 100% { background-position: 0% 50%; }
+50% { background-position: 100% 50%; }
+}
+
+header p {
+color: var(–muted);
+font-size: 0.9rem;
+margin-top: 8px;
+font-weight: 300;
+letter-spacing: 0.5px;
+}
+
+/* Filtros de categoría */
+.filters {
+display: flex;
+flex-wrap: wrap;
+gap: 8px;
+justify-content: center;
+margin-bottom: 28px;
+}
+
+.filter-btn {
+background: var(–card);
+border: 1.5px solid var(–border);
+color: var(–muted);
+font-family: ‘DM Sans’, sans-serif;
+font-size: 0.78rem;
+font-weight: 500;
+padding: 6px 14px;
+border-radius: 999px;
+cursor: pointer;
+transition: all 0.2s;
+letter-spacing: 0.3px;
+}
+
+.filter-btn:hover { color: var(–text); border-color: #555; }
+.filter-btn.active { color: #0d0d0f; font-weight: 600; }
+
+.filter-btn[data-cat=“all”].active      { background: var(–text); border-color: var(–text); }
+.filter-btn[data-cat=“conocerse”].active { background: var(–accent4); border-color: var(–accent4); }
+.filter-btn[data-cat=“divertidas”].active{ background: var(–accent2); border-color: var(–accent2); }
+.filter-btn[data-cat=“profundas”].active { background: var(–accent5); border-color: var(–accent5); }
+.filter-btn[data-cat=“atrevidas”].active { background: var(–accent1); border-color: var(–accent1); }
+.filter-btn[data-cat=“retos”].active     { background: var(–accent3); border-color: var(–accent3); }
+
+/* Turno */
+.turn-display {
+text-align: center;
+margin-bottom: 20px;
+font-size: 0.85rem;
+color: var(–muted);
+letter-spacing: 1px;
+text-transform: uppercase;
+}
+
+.turn-display span {
+font-weight: 600;
+font-size: 0.95rem;
+letter-spacing: 0.5px;
+}
+
+.turn-juan span { color: var(–accent4); }
+.turn-ella span  { color: var(–accent1); }
+
+/* Tarjeta principal */
+.card {
+background: var(–card);
+border: 1.5px solid var(–border);
+border-radius: 20px;
+padding: 36px 28px;
+text-align: center;
+position: relative;
+overflow: hidden;
+min-height: 220px;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+gap: 16px;
+margin-bottom: 20px;
+transition: border-color 0.3s;
+}
+
+.card::before {
+content: ‘’;
+position: absolute;
+top: 0; left: 0; right: 0;
+height: 3px;
+border-radius: 20px 20px 0 0;
+transition: background 0.3s;
+}
+
+.cat-conocerse .card::before  { background: var(–accent4); }
+.cat-divertidas .card::before { background: var(–accent2); }
+.cat-profundas .card::before  { background: var(–accent5); }
+.cat-atrevidas .card::before  { background: var(–accent1); }
+.cat-retos .card::before      { background: var(–accent3); }
+
+.cat-badge {
+font-size: 0.7rem;
+font-weight: 600;
+letter-spacing: 2px;
+text-transform: uppercase;
+padding: 4px 12px;
+border-radius: 999px;
+opacity: 0.85;
+}
+
+.cat-conocerse  .cat-badge { background: rgba(77,150,255,0.15);  color: var(–accent4); }
+.cat-divertidas .cat-badge { background: rgba(255,217,61,0.15);  color: var(–accent2); }
+.cat-profundas  .cat-badge { background: rgba(199,125,255,0.15); color: var(–accent5); }
+.cat-atrevidas  .cat-badge { background: rgba(255,107,107,0.15); color: var(–accent1); }
+.cat-retos      .cat-badge { background: rgba(107,203,119,0.15); color: var(–accent3); }
+
+.question-text {
+font-family: ‘Playfair Display’, serif;
+font-size: clamp(1.15rem, 4vw, 1.45rem);
+font-weight: 700;
+line-height: 1.4;
+color: var(–text);
+}
+
+.card-emoji {
+font-size: 2rem;
+line-height: 1;
+}
+
+/* Contador */
+.counter {
+font-size: 0.78rem;
+color: var(–muted);
+margin-top: 4px;
+}
+
+/* Botones */
+.btns {
+display: flex;
+gap: 12px;
+justify-content: center;
+flex-wrap: wrap;
+margin-bottom: 28px;
+}
+
+.btn {
+font-family: ‘DM Sans’, sans-serif;
+font-weight: 600;
+font-size: 0.9rem;
+padding: 13px 26px;
+border-radius: 12px;
+border: none;
+cursor: pointer;
+transition: all 0.18s;
+letter-spacing: 0.2px;
+}
+
+.btn-primary {
+background: linear-gradient(135deg, #ff6b6b, #ffd93d);
+color: #0d0d0f;
+flex: 1;
+min-width: 140px;
+}
+
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(255,107,107,0.3); }
+.btn-primary:active { transform: translateY(0); }
+
+.btn-secondary {
+background: var(–card);
+border: 1.5px solid var(–border);
+color: var(–muted);
+}
+
+.btn-secondary:hover { border-color: #555; color: var(–text); }
+
+/* Toggle turno */
+.turn-toggle {
+display: flex;
+background: var(–card);
+border: 1.5px solid var(–border);
+border-radius: 12px;
+overflow: hidden;
+margin-bottom: 24px;
+}
+
+.turn-btn {
+flex: 1;
+padding: 10px;
+font-family: ‘DM Sans’, sans-serif;
+font-size: 0.82rem;
+font-weight: 500;
+background: transparent;
+border: none;
+color: var(–muted);
+cursor: pointer;
+transition: all 0.2s;
+}
+
+.turn-btn.active { font-weight: 700; color: #0d0d0f; }
+.turn-btn[data-turn=“juan”].active { background: var(–accent4); }
+.turn-btn[data-turn=“ella”].active { background: var(–accent1); }
+
+/* Historial */
+.history-title {
+font-size: 0.75rem;
+text-transform: uppercase;
+letter-spacing: 2px;
+color: var(–muted);
+margin-bottom: 12px;
+text-align: center;
+}
+
+.history-list {
+display: flex;
+flex-direction: column;
+gap: 8px;
+max-height: 280px;
+overflow-y: auto;
+}
+
+.history-list::-webkit-scrollbar { width: 4px; }
+.history-list::-webkit-scrollbar-track { background: transparent; }
+.history-list::-webkit-scrollbar-thumb { background: var(–border); border-radius: 2px; }
+
+.history-item {
+background: var(–card);
+border: 1px solid var(–border);
+border-radius: 10px;
+padding: 10px 14px;
+font-size: 0.82rem;
+color: #aaa;
+display: flex;
+gap: 10px;
+align-items: flex-start;
+text-align: left;
+}
+
+.history-item .hi-turn {
+font-size: 0.68rem;
+font-weight: 700;
+letter-spacing: 0.5px;
+white-space: nowrap;
+padding-top: 1px;
+}
+
+.hi-juan { color: var(–accent4); }
+.hi-ella  { color: var(–accent1); }
+
+.empty-state {
+text-align: center;
+color: var(–muted);
+font-size: 0.85rem;
+padding: 20px;
+}
+
+.fade-in { animation: fadeSlide 0.4s ease; }
+@keyframes fadeSlide {
+from { opacity: 0; transform: translateY(10px); }
+to   { opacity: 1; transform: translateY(0); }
+}
+</style>
+
+</head>
+<body>
+<div class="wrapper">
+
+  <header>
+    <h1>Juego de<br>Preguntas 🎲</h1>
+    <p>Un juego para los dos — sin filtros, con honestidad</p>
+  </header>
+
+  <!-- Toggle de turno -->
+
+  <div class="turn-toggle">
+    <button class="turn-btn active" data-turn="juan" onclick="setTurn('juan')">👦 Tu turno (Juan)</button>
+    <button class="turn-btn" data-turn="ella" onclick="setTurn('ella')">👧 Su turno (Ella)</button>
+  </div>
+
+  <!-- Filtros -->
+
+  <div class="filters">
+    <button class="filter-btn active" data-cat="all" onclick="setFilter('all', this)">Todas</button>
+    <button class="filter-btn" data-cat="conocerse" onclick="setFilter('conocerse', this)">💬 Conocerse</button>
+    <button class="filter-btn" data-cat="divertidas" onclick="setFilter('divertidas', this)">😂 Divertidas</button>
+    <button class="filter-btn" data-cat="profundas" onclick="setFilter('profundas', this)">🌊 Profundas</button>
+    <button class="filter-btn" data-cat="atrevidas" onclick="setFilter('atrevidas', this)">🔥 Atrevidas</button>
+    <button class="filter-btn" data-cat="retos" onclick="setFilter('retos', this)">⚡ Retos</button>
+  </div>
+
+  <!-- Indicador de turno -->
+
+  <div id="turnDisplay" class="turn-display turn-juan">
+    Le toca responder a: <span>Juan</span>
+  </div>
+
+  <!-- Tarjeta de pregunta -->
+
+  <div id="cardWrapper" class="cat-conocerse">
+    <div class="card" id="questionCard">
+      <span class="cat-badge" id="catBadge">💬 Conocerse</span>
+      <div class="card-emoji" id="cardEmoji">🎯</div>
+      <p class="question-text" id="questionText">Presiona el botón para<br>sacar tu primera pregunta</p>
+      <span class="counter" id="counter"></span>
+    </div>
+  </div>
+
+  <!-- Botones -->
+
+  <div class="btns">
+    <button class="btn btn-primary" onclick="nextQuestion()">🎲 Nueva pregunta</button>
+    <button class="btn btn-secondary" onclick="resetGame()">↺ Reiniciar</button>
+  </div>
+
+  <!-- Historial -->
+
+  <p class="history-title">Preguntas anteriores</p>
+  <div class="history-list" id="historyList">
+    <div class="empty-state">Aquí aparecerán las preguntas usadas</div>
+  </div>
+
+</div>
+
+<script>
+const questions = {
+  conocerse: [
+    { q: "¿Cuál es tu recuerdo favorito de la infancia?", emoji: "🧸" },
+    { q: "¿Qué canción describe perfectamente tu estado de ánimo este mes?", emoji: "🎵" },
+    { q: "¿Cuál es el lugar en el mundo donde te has sentido más en paz?", emoji: "🌍" },
+    { q: "¿Qué es lo primero que nota la gente de ti cuando te conoce?", emoji: "👁️" },
+    { q: "¿Cuál es tu mayor logro del que te sientes orgulloso/a?", emoji: "🏆" },
+    { q: "¿Qué cosa pequeña del día a día te da más felicidad?", emoji: "☀️" },
+    { q: "¿Cómo eras de niño/a? ¿Tranquilo/a o travieso/a?", emoji: "🎠" },
+    { q: "¿Qué película o serie has visto más de tres veces?", emoji: "🎬" },
+    { q: "¿Cuál es tu forma favorita de pasar un domingo libre?", emoji: "💆" },
+    { q: "¿Tienes algún talento secreto que poca gente conoce?", emoji: "🎪" },
+    { q: "¿Cuál es la comida que nunca te podría faltar en tu vida?", emoji: "🍽️" },
+    { q: "¿Qué cosa de tu personalidad es la que más te gusta de ti mismo/a?", emoji: "💛" },
+    { q: "¿Cuál fue tu mayor aventura hasta ahora?", emoji: "🗺️" },
+    { q: "¿A qué edad te sientes por dentro?", emoji: "✨" },
+    { q: "¿Cuál es tu mayor manía o costumbre rara?", emoji: "🤔" },
+  ],
+  divertidas: [
+    { q: "¿Si fueras un personaje de película, cuál serías y por qué?", emoji: "🎭" },
+    { q: "¿Cuál es la mentira más tonta que dijiste de niño/a?", emoji: "🤥" },
+    { q: "¿Cuál es tu habilidad más inútil pero de la que te enorgulleces?", emoji: "🤹" },
+    { q: "Si te dieran un millón pero tienes que gastarlo en 24 horas, ¿qué harías?", emoji: "💸" },
+    { q: "¿Cuál es el peor corte de cabello que has tenido?", emoji: "✂️" },
+    { q: "¿A qué animal te compararías y por qué?", emoji: "🦊" },
+    { q: "¿Cuál es la cosa más vergonzosa que te ha pasado en público?", emoji: "😳" },
+    { q: "¿Pineapple en la pizza: sí o no? Defiende tu respuesta.", emoji: "🍕" },
+    { q: "¿Cuál es tu peor intento de impresionar a alguien?", emoji: "😬" },
+    { q: "¿Qué show de televisión te daría vergüenza que vieran en tu historial?", emoji: "📺" },
+    { q: "Si pudieras tener un superpoder ridículo, ¿cuál sería?", emoji: "🦸" },
+    { q: "¿Cuál es el chiste más malo que sabes pero igual te ríes?", emoji: "😂" },
+    { q: "¿Cuál sería tu nombre artístico si fueras cantante?", emoji: "🎤" },
+    { q: "¿Que app en tu celular te daría vergüenza que alguien vea?", emoji: "📱" },
+  ],
+  profundas: [
+    { q: "¿Qué es lo que más miedo te da en esta vida?", emoji: "🌑" },
+    { q: "¿En qué momento de tu vida sentiste que creciste de golpe?", emoji: "🌱" },
+    { q: "¿Cuál es la lección más dura que te enseñó alguien que amabas?", emoji: "💔" },
+    { q: "¿Qué versión de ti mismo/a extrañas de cuando eras más chico/a?", emoji: "🕊️" },
+    { q: "¿Cuál es la decisión de la que más te arrepientes?", emoji: "⏳" },
+    { q: "¿Qué es lo que más te cuesta pedir a los demás?", emoji: "🤝" },
+    { q: "¿Qué tipo de persona quieres ser en 5 años?", emoji: "🌟" },
+    { q: "¿Cuál es tu mayor inseguridad que muy pocos saben?", emoji: "🫂" },
+    { q: "¿Qué es lo que más valoras en una relación de pareja?", emoji: "💞" },
+    { q: "¿Hay algo que quisiste decirle a alguien y nunca lo dijiste?", emoji: "💬" },
+    { q: "¿Qué crees que la gente suele malentender de ti?", emoji: "🔍" },
+    { q: "¿Cuándo fue la última vez que lloraste y por qué?", emoji: "💧" },
+    { q: "¿Hay algo que estés dejando para después que sabes que deberías hacer ya?", emoji: "⌛" },
+  ],
+  atrevidas: [
+    { q: "¿Cuál fue tu primer crush y cómo terminó esa historia?", emoji: "💘" },
+    { q: "¿Qué es lo primero que te llama la atención físicamente de una persona?", emoji: "👀" },
+    { q: "¿Cuál fue el peor beso de tu vida?", emoji: "😬" },
+    { q: "¿Qué cosa harías en una cita que garantiza que habrá segunda?", emoji: "✅" },
+    { q: "¿Cuál es tu red flag que admites tener?", emoji: "🚩" },
+    { q: "¿Qué es lo más atrevido que has hecho por alguien que te gustaba?", emoji: "💪" },
+    { q: "¿Cuánto tiempo tardas en enamorarte cuando alguien te gusta de verdad?", emoji: "⏱️" },
+    { q: "¿Cuál es tu tipo de persona ideal y en qué se diferencia de tu ex?", emoji: "🎯" },
+    { q: "¿Prefieres que te conquisten con palabras, acciones o detalles físicos?", emoji: "💝" },
+    { q: "¿Cuál sería la señal definitiva de que alguien te gusta de verdad?", emoji: "🌡️" },
+    { q: "¿Qué es lo que más te gusta que te digan cuando alguien te tiene confianza?", emoji: "🫦" },
+    { q: "¿Qué canción le pondrías a alguien que te gusta para que capte el mensaje?", emoji: "🎶" },
+  ],
+  retos: [
+    { q: "Imita a la última persona que llamaste por teléfono. El otro decide si estuvo bien.", emoji: "🎭" },
+    { q: "Di algo verdadero sobre la otra persona que nunca le hayas dicho.", emoji: "💬" },
+    { q: "Muéstrale al otro la última foto de tu galería sin editar.", emoji: "📸" },
+    { q: "Llama a alguien al azar de tus contactos y di: 'necesito un consejo de amor'.", emoji: "📞" },
+    { q: "Haz una imitación del otro. Quien pierde paga algo.", emoji: "🪞" },
+    { q: "Di tres cosas que te gustan de la persona con la que estás jugando.", emoji: "💛" },
+    { q: "Muéstrale al otro tu última conversación de WhatsApp (que no sea de trabajo).", emoji: "💬" },
+    { q: "Haz una predicción sobre cómo será la vida del otro en 10 años.", emoji: "🔮" },
+    { q: "El otro tiene que adivinar tu contraseña de WiFi de casa con pistas.", emoji: "📶" },
+    { q: "Canta los primeros 15 segundos de la canción que tengas más escuchada.", emoji: "🎤" },
+  ]
+};
+
+const catMeta = {
+  conocerse:  { label: "💬 Conocerse",  css: "cat-conocerse"  },
+  divertidas: { label: "😂 Divertidas", css: "cat-divertidas" },
+  profundas:  { label: "🌊 Profundas",  css: "cat-profundas"  },
+  atrevidas:  { label: "🔥 Atrevidas",  css: "cat-atrevidas"  },
+  retos:      { label: "⚡ Retos",       css: "cat-retos"      },
+};
+
+let currentFilter = 'all';
+let currentTurn = 'juan';
+let usedIndexes = {};
+let history = [];
+
+function setFilter(cat, btn) {
+  currentFilter = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function setTurn(turn) {
+  currentTurn = turn;
+  document.querySelectorAll('.turn-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`.turn-btn[data-turn="${turn}"]`).classList.add('active');
+  const d = document.getElementById('turnDisplay');
+  d.className = 'turn-display turn-' + turn;
+  d.innerHTML = `Le toca responder a: <span>${turn === 'juan' ? 'Juan' : 'Ella'}</span>`;
+}
+
+function getPool() {
+  if (currentFilter !== 'all') return { cat: currentFilter, items: questions[currentFilter] };
+  const cats = Object.keys(questions);
+  const cat = cats[Math.floor(Math.random() * cats.length)];
+  return { cat, items: questions[cat] };
+}
+
+function nextQuestion() {
+  const { cat, items } = getPool();
+
+  if (!usedIndexes[cat]) usedIndexes[cat] = new Set();
+
+  // Si todos fueron usados, reinicia esa categoría
+  if (usedIndexes[cat].size >= items.length) usedIndexes[cat].clear();
+
+  let idx;
+  do { idx = Math.floor(Math.random() * items.length); }
+  while (usedIndexes[cat].has(idx));
+
+  usedIndexes[cat].add(idx);
+  const item = items[idx];
+  const meta = catMeta[cat];
+
+  // Actualizar tarjeta
+  const wrapper = document.getElementById('cardWrapper');
+  wrapper.className = meta.css;
+
+  document.getElementById('catBadge').textContent = meta.label;
+  document.getElementById('cardEmoji').textContent = item.emoji;
+  document.getElementById('questionText').textContent = item.q;
+  document.getElementById('counter').textContent = '';
+
+  const card = document.getElementById('questionCard');
+  card.classList.remove('fade-in');
+  void card.offsetWidth;
+  card.classList.add('fade-in');
+
+  // Agregar al historial
+  const entry = { turn: currentTurn, q: item.q, cat: meta.label, emoji: item.emoji };
+  history.unshift(entry);
+  renderHistory();
+
+  // Cambiar turno automáticamente
+  const next = currentTurn === 'juan' ? 'ella' : 'juan';
+  setTurn(next);
+}
+
+function renderHistory() {
+  const list = document.getElementById('historyList');
+  if (history.length === 0) {
+    list.innerHTML = '<div class="empty-state">Aquí aparecerán las preguntas usadas</div>';
+    return;
+  }
+  list.innerHTML = history.slice(0, 20).map(h => `
+    <div class="history-item">
+      <span class="hi-turn ${h.turn === 'juan' ? 'hi-juan' : 'hi-ella'}">${h.turn === 'juan' ? 'Juan' : 'Ella'}</span>
+      <span>${h.emoji} ${h.q}</span>
+    </div>
+  `).join('');
+}
+
+function resetGame() {
+  usedIndexes = {};
+  history = [];
+  currentTurn = 'juan';
+  setTurn('juan');
+  document.getElementById('catBadge').textContent = '💬 Conocerse';
+  document.getElementById('cardEmoji').textContent = '🎯';
+  document.getElementById('questionText').textContent = 'Presiona el botón para\nsakar tu primera pregunta';
+  document.getElementById('counter').textContent = '';
+  document.getElementById('cardWrapper').className = 'cat-conocerse';
+  renderHistory();
+}
+</script>
+
+</body>
+</html>
